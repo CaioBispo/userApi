@@ -8,10 +8,15 @@ services:
       - 80:80
     volumes:
       - .:/var/www/html
+      - composercache:/.composer
+    environment:
+      - APP_ENV=local
     links:
       - bancodedados
   bancodedados:
     image: mariadb:latest
+    volumes:
+      - bancodedados:/var/lib/mysql
     ports:
       - 3306:3306
     environment:
@@ -19,3 +24,12 @@ services:
       MYSQL_USER: caio
       MYSQL_PASSWORD: 1234
       MYSQL_ROOT_PASSWORD: 123456
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    links:
+      - "bancodedados:db"
+volumes:
+  bancodedados:
+  composercache:
